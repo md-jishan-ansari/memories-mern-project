@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import DB_ROUTE from '../config.js';
 
-const Api = axios.create({ baseURL: `${DB_ROUTE}/api/v1/` });
+const Api = axios.create({ baseURL: DB_ROUTE });
 
 Api.interceptors.request.use((req) => {
     const user = JSON.parse(localStorage.getItem('profile'));
@@ -12,14 +12,14 @@ Api.interceptors.request.use((req) => {
     return req;
 })
 
-export const getPost = (id) => Api.get(`/posts/${id}`);
-export const getPosts = (page) => Api.get(`/posts?page=${page}`);
-export const getPostBySearch = (search, tags) => Api.get(`/posts/search?search=${search}&tags=${tags}`);
-export const createPost = (post) => Api.post('/posts', post);
-export const deletePost = (postId) => Api.delete(`/posts`, { data: postId });
-export const likePost = ({ postId, userId }) => Api.patch('/posts/post', { postId, userId });
-export const updatePost = (id, updatedPost) => Api.patch(`/posts/${id}`, updatedPost);
-export const addComment = (id, comment) => Api.patch(`/posts/${id}/comment`, { comment });
+export const getPost = (id) => Api.get(`/api/v1/posts/${id}`);
+export const getPosts = (page) => Api.get(`/api/v1/posts?page=${page}`);
+export const getPostBySearch = (search, tags) => Api.get(`/api/v1/posts/search?search=${search}&tags=${tags}`);
+export const createPost = (post) => Api.post('/api/v1/posts', post);
+export const deletePost = (postId) => Api.delete(`/api/v1/posts`, { data: postId });
+export const likePost = ({ postId, userId }) => Api.patch('/api/v1/posts/post', { postId, userId });
+export const updatePost = (id, updatedPost) => Api.patch(`/api/v1/posts/${id}`, updatedPost);
+export const addComment = (id, comment) => Api.patch(`/api/v1/posts/${id}/comment`, { comment });
 
-export const login = (userData) => Api.post('/user/login', userData);
-export const signup = (userData) => Api.post('/user/signup', userData);
+export const login = (userData) => Api.post('/api/v1/user/login', userData);
+export const signup = (userData) => Api.post('/api/v1/user/signup', userData);
