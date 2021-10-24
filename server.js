@@ -40,8 +40,8 @@ const server = app.listen(port, () => {
 });
 
 
-app.use('/posts', postRouter);
-app.use('/user', userRouter);
+app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/user', userRouter);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/client/build')));

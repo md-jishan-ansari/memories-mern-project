@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import DB_ROUTE from '../config.js';
 
-const Api = axios.create({ baseURL: DB_ROUTE });
+const Api = axios.create({ baseURL: `${DB_ROUTE}/api/v1/` });
 
 Api.interceptors.request.use((req) => {
     const user = JSON.parse(localStorage.getItem('profile'));
