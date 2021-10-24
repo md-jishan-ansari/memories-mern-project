@@ -39,10 +39,6 @@ const server = app.listen(port, () => {
     console.log(`server is running on port ${port}`);
 });
 
-app.get("/", (req, res) => {
-    res.send("app is successfully deployed");
-});
-
 
 app.use('/posts', postRouter);
 app.use('/user', userRouter);
