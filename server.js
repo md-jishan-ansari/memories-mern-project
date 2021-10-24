@@ -5,6 +5,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 
+const __dirname = path.resolve();
+
 import postRouter from './routes/postsRoute.js';
 import userRouter from './routes/userRoute.js';
 
