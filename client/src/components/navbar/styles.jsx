@@ -2,14 +2,24 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
-    height: 85,
+    minHeight: 85,
     justifyContent: 'center',
     margin: '30px 0px',
     borderRadius: '15px',
   },
+  toolbar: {
+    display: 'flex',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+  },
   logo: {
     display: 'flex',
     alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      margin: '10px 0',
+    },
   },
   imgText: {
     width: 200,
@@ -30,12 +40,34 @@ const useStyles = makeStyles((theme) => ({
     '&>*': {
       marginLeft: 10,
     },
+    [theme.breakpoints.down('xs')]: {
+      margin: '0 0 10px 0',
+    },
   },
   avatar: {
     backgroundColor: 'purple',
+    marginRight: 5,
+  },
+  userButton: {
+    padding: '1px 10px',
+    borderRadius: '20px',
   },
   menuContainer: {
-    marginTop: 50,
+    // marginTop: 50,
+    margin: '50px 50px 0 0',
+    transform: 'translateX(-14px)',
+  },
+  navbarButton: {
+    display: 'flex',
+    margin: '0 10px 0 auto',
+    '&>*': {
+      margin: '0 0 0 16px',
+      padding: '7px 23px',
+      borderRadius: '20px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin: '0 0 10px 0',
+    },
   },
 }));
 

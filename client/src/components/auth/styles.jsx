@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  forgotPasswordLink: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;

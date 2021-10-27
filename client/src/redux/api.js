@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-import DB_ROUTE from '../config.js';
+import variable from '../config.js';
+const { DB_ROUTE } = variable;
 
 const Api = axios.create({ baseURL: DB_ROUTE });
 

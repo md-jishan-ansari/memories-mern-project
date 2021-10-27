@@ -38,7 +38,7 @@ const Post = ({ post, setCurrentId }) => {
   };
 
   const clickUpdateHandler = () => {
-    setCurrentId(post._id);
+    if (setCurrentId) setCurrentId(post._id);
   };
 
   const clickHandler = () => {
