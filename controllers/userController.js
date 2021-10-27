@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 
+import PostMessage from '../models/post.js';
+
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
@@ -65,5 +67,19 @@ export const signup = async (req, res) => {
         res.status(200).json({ userData: user, token });
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const getUserPosts = async (req, res) => {
+    try {
+        const { id } = req.params;
+        // if (!mongoose.Types.ObjectId.isValid(id))
+        //     res.status(400).json({ message: "id is not valid" });
+
+        const posts = await PostMessage.find({ creater: id }).sort({ _id: -1 });
+        res.status(200).json({ posts });
+
+    } catch (error) {
+        console.log(error.message);
     }
 }

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Grid, makeStyles, Paper, Typography, CircularProgress } from '@material-ui/core';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getUserPosts } from '../../redux/actions/userActions';
+
+import { TemplateContext } from '../../template/TemplateProvider';
 
 import Post from '../posts/post/Post';
 
@@ -29,9 +32,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserMemories = () => {
-  const { posts, isProgress } = useSelector((state) => state.posts);
+  const ctx = useContext(TemplateContext);
+  const dispatch = useDispatch();
+  const { isProgress } = useSelector((state) => state.posts);
+  const { posts } = useSelector((state) => state.user.userPosts);
 
   const classes = useStyles();
+
+  useEffect(() => {
+    dispatch(getUserPosts(ctx?.user?.userData?._id));
+  }, [ctx?.user?.userData?._id]);
 
   if (posts?.length === 0 || isProgress)
     return (

@@ -1,18 +1,14 @@
 import React, { useState, Fragment } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { GoogleLogin } from 'react-google-login';
 
 import { Paper, Box, Typography, Button, Grid } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
-import GoogleIcon from '@mui/icons-material/Google';
+
 import { login, signup } from '../../redux/actions/userActions.js';
 
 import useStyles from './styles';
 import Input from './Input';
-
-import constants from '../../config.js';
-const { FRONT_ROUTE } = constants;
 
 const initialUserData = {
   firstName: '',
@@ -67,15 +63,6 @@ const Auth = () => {
       dispatch(login(userData, history));
     }
     setUserData(initialUserData);
-  };
-
-  const googleSuccess = async (res) => {
-    dispatch({ type: 'AUTH', payload: { userData: res.profileObj, token: res.tokenId } });
-    history.push('/');
-  };
-
-  const googleError = () => {
-    console.log('Google Sign In was unsuccessful! Try again later');
   };
 
   return (
@@ -150,26 +137,6 @@ const Auth = () => {
         <Button type="submit" fullWidth variant="contained" color="primary">
           {isForgotPassword ? 'Send Reset Link' : isSignup ? 'Sign up' : 'sign in'}
         </Button>
-
-        <GoogleLogin
-          clientId="26179719531-0i4v58bc6afmg2b2pjvlg1bd443e55u0.apps.googleusercontent.com"
-          render={(renderProps) => (
-            <Button
-              color="primary"
-              fullWidth
-              onClick={renderProps.onClick}
-              disabled={renderProps.disabled}
-              variant="contained"
-              className={classes.googleButton}
-              startIcon={<GoogleIcon />}
-            >
-              Google Sign In
-            </Button>
-          )}
-          onSuccess={googleSuccess}
-          onFailure={googleError}
-          cookiePolicy="single_host_origin"
-        />
 
         <Button className={classes.switchButton} onClick={switchHandler}>
           {isForgotPassword

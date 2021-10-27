@@ -16,6 +16,7 @@ Api.interceptors.request.use((req) => {
 export const getPost = (id) => Api.get(`/api/v1/posts/${id}`);
 export const getPosts = (page) => Api.get(`/api/v1/posts?page=${page}`);
 export const getPostBySearch = (search, tags) => Api.get(`/api/v1/posts/search?search=${search}&tags=${tags}`);
+export const getUserPosts = (id) => Api.get(`/api/v1/user/userPosts/${id}`);
 export const createPost = (post) => Api.post('/api/v1/posts', post);
 export const deletePost = (postId) => Api.delete(`/api/v1/posts`, { data: postId });
 export const likePost = ({ postId, userId }) => Api.patch('/api/v1/posts/post', { postId, userId });

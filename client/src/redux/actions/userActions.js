@@ -1,6 +1,8 @@
 import * as api from '../api';
 
-import { AUTH } from '../constants/userConstants';
+import { AUTH, GET_USER_POSTS } from '../constants/userConstants';
+import { START_LOADING, END_LOADING } from '../constants/postConstants';
+
 
 export const login = (userData, history) => async (dispatch) => {
     try {
@@ -19,5 +21,16 @@ export const signup = (userData, history) => async (dispatch) => {
         history.push('/');
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const getUserPosts = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: START_LOADING });
+        const { data } = await api.getUserPosts(id);
+        dispatch({ type: GET_USER_POSTS, payload: data });
+        dispatch({ type: END_LOADING });
+    } catch (error) {
+        console.log(error.response);
     }
 }
