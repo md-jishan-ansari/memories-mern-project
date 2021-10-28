@@ -2,133 +2,120 @@ import mongoose from 'mongoose';
 
 import PostMessage from '../models/post.js';
 
-export const getPost = async (req, res) => {
-    const { id } = req.params;
-    try {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            res.status(400).json({ message: "id is not valid" });
+import { catchAsync } from '../utils/catchAsync';
+import AppError from '../utils/appError';
 
-        const data = await PostMessage.findById(id);
-        res.status(200).json({ data });
+export const getPost = catchAsync(async (req, res, next) => {
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+    const id = req.params.id;
 
-export const getPosts = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return next(new AppError('id is not valid', 400));
+
+    const data = await PostMessage.findById(id);
+    res.status(200).json({ data });
+
+})
+
+export const getPosts = catchAsync(async (req, res, next) => {
     const page = req.query.page || 1;
-    try {
-        const LIMIT = 8;
-        const startIndex = (Number(page) - 1) * LIMIT;
 
-        const total = await PostMessage.countDocuments({});
-        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT;
 
-        res.status(200).json({
-            data: posts,
-            currentPage: Number(page),
-            numberOfPages: Math.ceil(total / LIMIT)
-        });
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+    const total = await PostMessage.countDocuments({});
+    const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
 
-export const getPostBySearch = async (req, res) => {
+    res.status(200).json({
+        data: posts,
+        currentPage: Number(page),
+        numberOfPages: Math.ceil(total / LIMIT)
+    });
+
+})
+
+export const getPostBySearch = catchAsync(async (req, res, next) => {
     const search = req.query.search;
     const tags = req.query.tags.split(",");
-    try {
-        const title = new RegExp(search, "i");
-        const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags } }] });
-        res.status(200).json({ data: posts });
-    } catch (error) {
-        console.log(error);
-    }
-}
 
-export const createPost = async (req, res) => {
-    try {
-        const data = await PostMessage.create({ ...req.body, createdAt: new Date().toISOString() });
-        res.status(201).json({
-            status: 'success',
-            data,
-        })
-    } catch (error) {
-        console.log("createPost", error.message);
-    }
-}
+    const title = new RegExp(search, "i");
+    const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags } }] });
+    res.status(200).json({ data: posts });
 
-export const deletePost = async (req, res) => {
-    try {
+})
 
-        if (!mongoose.Types.ObjectId.isValid(req.body.id))
-            res.status(400).json({ message: "id is not valid" });
+export const createPost = catchAsync(async (req, res, next) => {
 
-        await PostMessage.findByIdAndRemove(req.body.id);
-        res.status(200).json({
-            status: "success",
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+    const data = await PostMessage.create({ ...req.body, createdAt: new Date().toISOString() });
+    res.status(201).json({
+        status: 'success',
+        data,
+    })
 
-export const updatePost = async (req, res) => {
+})
+
+export const deletePost = catchAsync(async (req, res, next) => {
+
+
+    if (!mongoose.Types.ObjectId.isValid(req.body.id))
+        return next(new AppError('id is not valid', 400));
+
+    await PostMessage.findByIdAndRemove(req.body.id);
+    res.status(200).json({
+        status: "success",
+    })
+
+})
+
+export const updatePost = catchAsync(async (req, res, next) => {
     const { id } = req.params;
 
-    try {
-        if (!mongoose.Types.ObjectId.isValid(id))
-            res.status(400).json({ message: "id is not valid" });
 
-        const data = await PostMessage.findByIdAndUpdate(id, req.body, { new: true });
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return next(new AppError('id is not valid', 400));
 
-        res.status(200).json({ data });
-    } catch (error) {
-        console.log(error);
-    }
-}
+    const post = await PostMessage.findByIdAndUpdate(id, req.body, { new: true });
 
-export const likePost = async (req, res) => {
+    res.status(200).json({ post });
+
+})
+
+export const likePost = catchAsync(async (req, res, next) => {
     const { postId, userId } = req.body;
 
-    try {
-        if (!mongoose.Types.ObjectId.isValid(postId)) res.status(400).json({ message: "Post is not found" });
+    if (!mongoose.Types.ObjectId.isValid(postId))
+        return next(new AppError('Post is not found', 400));
 
-        const post = await PostMessage.findById(postId);
-        const isUserLiked = post.likes.findIndex(id => id === String(userId));
+    const post = await PostMessage.findById(postId);
+    const isUserLiked = post.likes.findIndex(id => id === String(userId));
 
-        if (isUserLiked === -1) {
-            console.log("like");
-            post?.likes?.push(String(userId));
-        }
-        else {
-            console.log('unLike');
-            post.likes = post.likes.filter(id => id !== String(userId));
-        }
-
-        const updatedPost = await PostMessage.findByIdAndUpdate(postId, post, { new: true });
-
-        res.status(200).json({ post: updatedPost })
-    } catch (error) {
-        console.log(error);
+    if (isUserLiked === -1) {
+        // console.log("like");
+        post?.likes?.push(String(userId));
     }
-}
+    else {
+        // console.log('unLike');
+        post.likes = post.likes.filter(id => id !== String(userId));
+    }
 
-export const addComment = async (req, res) => {
+    const updatedPost = await PostMessage.findByIdAndUpdate(postId, post, { new: true });
+
+    res.status(200).json({ post: updatedPost })
+
+})
+
+export const addComment = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const comment = req.body.comment;
-    try {
-        if (!mongoose.Types.ObjectId.isValid(id)) res.status(400).json({ message: "post is not found" });
 
-        const post = await PostMessage.findOne({ _id: id });
-        post.comments.push(comment);
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return next(new AppError('Post is not found', 400));
 
-        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
+    const post = await PostMessage.findOne({ _id: id });
+    post.comments.push(comment);
 
-        res.status(200).json({ post: updatedPost });
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+    res.status(200).json({ post: updatedPost });
+
+})

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Grid, makeStyles, Paper, Typography, CircularProgress } from '@material-ui/core';
-
 import { useSelector } from 'react-redux';
-
 import Post from '../posts/post/Post';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,14 +27,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SavedMemories = () => {
-  const { posts, isProgress } = useSelector((state) => state.posts);
-
   const classes = useStyles();
 
-  if (posts?.length === 0 || isProgress)
+  const { isProgress, savedPosts } = useSelector((state) => state.posts);
+
+  if (savedPosts?.length === 0 || isProgress)
     return (
       <Paper className={classes.noPost} elevation={6}>
-        {isProgress ? <CircularProgress /> : <Typography variant="h5">No Posts</Typography>}
+        {isProgress ? (
+          <CircularProgress />
+        ) : (
+          <Typography variant="h4" style={{ fontWeight: 'bold', textAlign: 'center' }}>
+            You don't have any saved memories yet
+          </Typography>
+        )}
       </Paper>
     );
 
@@ -46,7 +50,7 @@ const SavedMemories = () => {
         Your Saved Memories
       </Typography>
       <Grid container spacing={3} className={classes.container}>
-        {posts?.map((post) => (
+        {savedPosts?.map((post) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={post._id}>
             <Post post={post} />
           </Grid>

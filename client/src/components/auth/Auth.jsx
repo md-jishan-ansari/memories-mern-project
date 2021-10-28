@@ -27,8 +27,6 @@ const Auth = () => {
   const [userData, setUserData] = useState(initialUserData);
   const [passwordType, setPasswordType] = useState('password');
 
-  console.log(params);
-
   const setShowPassword = () => {
     if (passwordType === 'password') setPasswordType('text');
     else setPasswordType('password');

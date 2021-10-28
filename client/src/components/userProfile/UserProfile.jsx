@@ -66,7 +66,7 @@ export default function UserProfileData() {
   const [image, setImage] = useState(
     ctx?.user?.userData?.photo && `/img/users/${ctx?.user?.userData?.photo}`
   );
-  console.log(ctx?.user?.userData?.photo, image);
+  // console.log(ctx?.user?.userData?.photo, image);s
 
   const [passwordType, setPasswordType] = useState('password');
   const classes = useStyles();

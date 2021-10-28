@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   Box,
@@ -15,9 +15,20 @@ import {
 } from '@material-ui/core';
 
 import moment from 'moment';
-import { MoreHoriz, ThumbUpAltOutlined, ThumbUpAlt, Delete } from '@material-ui/icons';
+
+import {
+  MoreHoriz,
+  ThumbUpAltOutlined,
+  ThumbUpAlt,
+  Delete,
+  BookmarkBorder,
+  // BookmarkAdded,
+} from '@material-ui/icons';
+
+import BookmarkAdded from '@mui/icons-material/BookmarkAdded';
+
 import useStyles from './styles';
-import { deletePost, likePost } from '../../../redux/actions/postActions.js';
+import { deletePost, likePost, savePost } from '../../../redux/actions/postActions.js';
 
 import { TemplateContext } from '../../../template/TemplateProvider';
 
@@ -27,6 +38,10 @@ const Post = ({ post, setCurrentId }) => {
   const [likes, setLikes] = useState(post.likes);
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const { savedIds } = useSelector((state) => state.posts);
+
+  const isSaved = savedIds.includes(post._id);
 
   const userId = ctx?.user?.userData?._id || ctx?.user?.userData?.googleId;
   // const hashLikedPost = post?.likes?.find((like) => like === userId);
@@ -38,11 +53,16 @@ const Post = ({ post, setCurrentId }) => {
   };
 
   const clickUpdateHandler = () => {
-    if (setCurrentId) setCurrentId(post._id);
+    // if (setCurrentId) setCurrentId(post._id);
+    setCurrentId(post._id);
   };
 
   const clickHandler = () => {
     dispatch(deletePost(post._id));
+  };
+
+  const savePostHandler = () => {
+    dispatch(savePost(ctx?.user?.userData?._id, post));
   };
 
   const likeHandler = () => {
@@ -52,7 +72,7 @@ const Post = ({ post, setCurrentId }) => {
     if (hashLikedPost) {
       setLikes(post.likes.filter((like) => like !== userId));
     } else {
-      console.log('not liked');
+      // console.log('not liked');
       setLikes([...post?.likes, userId]);
     }
   };
@@ -122,10 +142,14 @@ const Post = ({ post, setCurrentId }) => {
         <Button size="small" color="primary" disabled={!userId} onClick={likeHandler}>
           <Likes />
         </Button>
-        {isPostCreatedByUser && (
+        {isPostCreatedByUser ? (
           <Button size="small" color="secondary" onClick={clickHandler}>
             <Delete />
             &nbsp;delete
+          </Button>
+        ) : (
+          <Button size="small" color="primary" onClick={savePostHandler}>
+            {isSaved ? <BookmarkAdded /> : <BookmarkBorder />}
           </Button>
         )}
       </CardActions>

@@ -8,3 +8,7 @@ export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const GET_POST_BY_SEARCH = 'GET_POST_BY_SEARCH';
 export const START_LOADING = "START_LOADING";
 export const END_LOADING = "END_LOADING";
+
+export const GET_USER_POSTS = 'GET_USER_POSTS';
+export const SAVE_POST = 'SAVE_POST';
+export const GET_SAVED_POSTS = 'GET_SAVED_POSTS';

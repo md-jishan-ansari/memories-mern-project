@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import useStyle from './styles';
 
-import { Box, Button, Typography, Avatar, Hidden, Menu, MenuItem } from '@material-ui/core';
+import { Box, Button, Typography, Avatar, Menu, MenuItem } from '@material-ui/core';
 
 import { TemplateContext } from '../../template/TemplateProvider';
 
@@ -89,8 +89,7 @@ const NavbarButton = () => {
   ) : (
     <Box className={classes.navbarButton}>
       <Button
-        component={Link}
-        to="/user/login"
+        onClick={() => history.push('/user/login')}
         variant="contained"
         color="primary"
         className={classes.signinButton}
@@ -99,8 +98,7 @@ const NavbarButton = () => {
       </Button>
 
       <Button
-        component={Link}
-        to="/user/signup"
+        onClick={() => history.push('/user/signup')}
         variant="outlined"
         color="primary"
         className={classes.signinButton}

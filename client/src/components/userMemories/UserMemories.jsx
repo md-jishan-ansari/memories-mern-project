@@ -1,14 +1,20 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Grid, makeStyles, Paper, Typography, CircularProgress } from '@material-ui/core';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserPosts } from '../../redux/actions/userActions';
+import { getUserPosts } from '../../redux/actions/postActions';
 
 import { TemplateContext } from '../../template/TemplateProvider';
 
 import Post from '../posts/post/Post';
+import Form from '../form/Form';
 
 const useStyles = makeStyles((theme) => ({
+  mainContainer: {
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column-reverse',
+    },
+  },
   container: {
     padding: '0 12px 24px 12px',
   },
@@ -33,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
 
 const UserMemories = () => {
   const ctx = useContext(TemplateContext);
+  const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
-  const { isProgress } = useSelector((state) => state.posts);
-  const { posts } = useSelector((state) => state.user.userPosts);
+  const { isProgress, userPosts } = useSelector((state) => state.posts);
 
   const classes = useStyles();
 
@@ -43,24 +49,36 @@ const UserMemories = () => {
     dispatch(getUserPosts(ctx?.user?.userData?._id));
   }, [ctx?.user?.userData?._id]);
 
-  if (posts?.length === 0 || isProgress)
-    return (
-      <Paper className={classes.noPost} elevation={6}>
-        {isProgress ? <CircularProgress /> : <Typography variant="h5">No Posts</Typography>}
-      </Paper>
-    );
-
   return (
     <>
       <Typography variant="h3" className={classes.heading}>
         Your Created Memories
       </Typography>
-      <Grid container spacing={3} className={classes.container}>
-        {posts?.map((post) => (
-          <Grid item xs={12} sm={6} md={3} lg={3} key={post._id}>
-            <Post post={post} />
-          </Grid>
-        ))}
+      <Grid container className={classes.mainContainer}>
+        <Grid item md={9} sm={6} xs={12}>
+          {userPosts?.length === 0 || isProgress ? (
+            <Paper className={classes.noPost} elevation={6}>
+              {isProgress ? (
+                <CircularProgress />
+              ) : (
+                <Typography variant="h4" style={{ fontWeight: 'bold', textAlign: 'center' }}>
+                  You don't have any created memories yet
+                </Typography>
+              )}
+            </Paper>
+          ) : (
+            <Grid container spacing={3} className={classes.container}>
+              {userPosts?.map((post) => (
+                <Grid item xs={12} sm={12} md={6} lg={3} key={post._id}>
+                  <Post post={post} setCurrentId={setCurrentId} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Grid>
+        <Grid item md={3} sm={6} xs={12}>
+          <Form currentId={currentId} setCurrentId={setCurrentId} />
+        </Grid>
       </Grid>
     </>
   );

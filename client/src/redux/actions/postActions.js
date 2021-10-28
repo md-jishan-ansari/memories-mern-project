@@ -1,17 +1,32 @@
 import * as api from '../api.js';
 
-import { GET_POST_SUCCESS, GET_POSTS_SUCCESS, CREATE_POST_SUCCESS, DELETE_POST_SUCCESS, UPDATE_POST_SUCCESS, LIKE_POST, ADD_COMMENT_SUCCESS, GET_POST_BY_SEARCH, START_LOADING, END_LOADING } from '../constants/postConstants.js';
+import {
+    GET_POST_SUCCESS,
+    GET_POSTS_SUCCESS,
+    CREATE_POST_SUCCESS,
+    DELETE_POST_SUCCESS,
+    UPDATE_POST_SUCCESS,
+    LIKE_POST, ADD_COMMENT_SUCCESS,
+    GET_POST_BY_SEARCH,
+    START_LOADING,
+    END_LOADING,
+    GET_USER_POSTS, SAVE_POST, GET_SAVED_POSTS
+} from '../constants/postConstants.js';
 
+// import { SUCCESS, WARNING, ERROR, INFO } from '../constants/userConstants';
+
+import { Alert } from '../Alert';
 
 export const getPost = (id) => async (dispatch) => {
     try {
         dispatch({ type: START_LOADING });
-
         const { data } = await api.getPost(id);
+        // console.log(data);
         dispatch({ type: GET_POST_SUCCESS, payload: data });
+
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
     }
 }
 
@@ -36,6 +51,38 @@ export const getPostBySearch = (search, tags) => async (dispatch) => {
         dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const getUserPosts = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: START_LOADING });
+        const { data } = await api.getUserPosts(id);
+        dispatch({ type: GET_USER_POSTS, payload: data });
+        dispatch({ type: END_LOADING });
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
+export const savePost = (userId, post) => async (dispatch) => {
+    try {
+        const { data } = await api.savePost(userId, post);
+        dispatch({ type: SAVE_POST, payload: data });
+
+    } catch (error) {
+        console.log(error.response);
+    }
+}
+
+export const getSavedPosts = (userId) => async (dispatch) => {
+    try {
+        dispatch({ type: START_LOADING });
+        const { data } = await api.getSavedPosts(userId);
+        dispatch({ type: GET_SAVED_POSTS, payload: data });
+        dispatch({ type: END_LOADING });
+    } catch (error) {
+        console.log(error.response);
     }
 }
 
@@ -64,11 +111,12 @@ export const deletePost = (id) => async (dispatch) => {
     }
 }
 
-export const updatePost = (id, updatedPost, history) => async (dispatch) => {
+export const updatePost = (id, updatedPost) => async (dispatch) => {
     try {
+        dispatch({ type: START_LOADING });
         const { data } = await api.updatePost(id, updatedPost);
         dispatch({ type: UPDATE_POST_SUCCESS, payload: data });
-        history.push('/');
+        dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
     }

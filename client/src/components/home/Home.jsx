@@ -31,8 +31,8 @@ function useQuery() {
 
 const Home = () => {
   const classes = useStyles();
-  const history = useHistory();
   const [currentId, setCurrentId] = useState(0);
+  const history = useHistory();
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const query = useQuery();

@@ -16,12 +16,15 @@ Api.interceptors.request.use((req) => {
 export const getPost = (id) => Api.get(`/api/v1/posts/${id}`);
 export const getPosts = (page) => Api.get(`/api/v1/posts?page=${page}`);
 export const getPostBySearch = (search, tags) => Api.get(`/api/v1/posts/search?search=${search}&tags=${tags}`);
-export const getUserPosts = (id) => Api.get(`/api/v1/user/userPosts/${id}`);
 export const createPost = (post) => Api.post('/api/v1/posts', post);
 export const deletePost = (postId) => Api.delete(`/api/v1/posts`, { data: postId });
 export const likePost = ({ postId, userId }) => Api.patch('/api/v1/posts/post', { postId, userId });
 export const updatePost = (id, updatedPost) => Api.patch(`/api/v1/posts/${id}`, updatedPost);
 export const addComment = (id, comment) => Api.patch(`/api/v1/posts/${id}/comment`, { comment });
 
+
 export const login = (userData) => Api.post('/api/v1/user/login', userData);
 export const signup = (userData) => Api.post('/api/v1/user/signup', userData);
+export const getUserPosts = (id) => Api.get(`/api/v1/user/userPosts/${id}`);
+export const savePost = (userId, post) => Api.patch(`/api/v1/user/savePost/${userId}`, { post });
+export const getSavedPosts = (id) => Api.get(`/api/v1/user/savedPosts/${id}`);

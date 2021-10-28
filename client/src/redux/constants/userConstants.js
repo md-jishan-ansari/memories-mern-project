@@ -1,3 +1,7 @@
 export const AUTH = "AUTH";
 export const LOGOUT = 'LOGOUT';
-export const GET_USER_POSTS = 'GET_USER_POSTS';
+
+export const SUCCESS = "SUCCESS";
+export const WARNING = "WARNING";
+export const ERROR = "ERROR";
+export const INFO = "INFO";

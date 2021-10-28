@@ -10,6 +10,8 @@ const __dirname = path.resolve();
 import postRouter from './routes/postsRoute.js';
 import userRouter from './routes/userRoute.js';
 
+import { globalErrorHandler } from './controllers/errorController';
+
 process.on('uncaughtException', (error) => {
     console.log('UNCAUGHT EXCEPTIONS 🌟 shutting down');
     console.log(error.name, error.message);
@@ -49,6 +51,8 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
     });
 }
+
+app.use(globalErrorHandler);
 
 process.on('unhandledRejection', (error) => {
     console.log("UNHANDLED REJECTION 🌟 shutting down server");

@@ -25,7 +25,7 @@ const Form = ({ currentId, setCurrentId }) => {
   const dispatch = useDispatch();
 
   const post = useSelector((state) =>
-    currentId ? state.posts.posts.find((post) => post._id === currentId) : null
+    currentId ? state.posts.userPosts.find((post) => post._id === currentId) : null
   );
 
   const clear = () => {
@@ -42,19 +42,19 @@ const Form = ({ currentId, setCurrentId }) => {
   };
 
   const handleAddChip = (chip) => {
-    console.log(chip);
+    // console.log(chip);
     setPostData({ ...postData, tags: [...postData.tags, chip] });
   };
 
   const handleDeleteChip = (chip) => {
-    console.log(chip);
+    // console.log(chip);
     setPostData({ ...postData, tags: postData.tags.filter((c) => c !== chip) });
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (currentId) {
-      dispatch(updatePost(post._id, postData, history));
+      dispatch(updatePost(post._id, postData));
       setCurrentId(0);
     } else {
       dispatch(

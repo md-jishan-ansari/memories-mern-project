@@ -1,15 +1,28 @@
 import React, { useEffect, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Box } from '@material-ui/core';
 
-import NavbarButton from './NavbarButton';
+import { useDispatch } from 'react-redux';
+import { TemplateContext } from '../../template/TemplateProvider';
 
-// import { logout } from '../../redux/actions/userActions';
+import { getSavedPosts } from '../../redux/actions/postActions';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import NavbarButton from './NavbarButton';
 
 import useStyles from './styles';
 
 const Navbar = () => {
   const classes = useStyles();
+
+  const ctx = useContext(TemplateContext);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (ctx?.user) dispatch(getSavedPosts(ctx?.user?.userData?._id));
+  }, [ctx?.user]);
 
   return (
     <AppBar position="static" className={classes.appbar} color="inherit">
@@ -24,6 +37,7 @@ const Navbar = () => {
         </Box>
         <NavbarButton />
       </Toolbar>
+      <ToastContainer />
     </AppBar>
   );
 };

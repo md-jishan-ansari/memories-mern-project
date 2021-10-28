@@ -5,10 +5,13 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 export const TemplateContext = createContext({
   user: null,
   setUser: null,
+  currentId: 0,
+  setCurrentId: null,
 });
 
 const TemplateProvider = (props) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [currentId, setCurrentId] = useState(0);
 
   const theme = createTheme({
     overrides: {
@@ -29,7 +32,9 @@ const TemplateProvider = (props) => {
   });
 
   return (
-    <TemplateContext.Provider value={{ user: user, setUser: setUser }}>
+    <TemplateContext.Provider
+      value={{ user: user, setUser: setUser, currentId: currentId, setCurrentId: setCurrentId }}
+    >
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {props.children}
