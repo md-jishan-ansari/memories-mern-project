@@ -22,7 +22,6 @@ import {
   ThumbUpAlt,
   Delete,
   BookmarkBorder,
-  // BookmarkAdded,
 } from '@material-ui/icons';
 
 import BookmarkAdded from '@mui/icons-material/BookmarkAdded';
@@ -31,6 +30,9 @@ import useStyles from './styles';
 import { deletePost, likePost, savePost } from '../../../redux/actions/postActions.js';
 
 import { TemplateContext } from '../../../template/TemplateProvider';
+
+import variable from '../../../config.js';
+const { DB_ROUTE } = variable;
 
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
@@ -118,10 +120,7 @@ const Post = ({ post, setCurrentId }) => {
       <ButtonBase component="span" name="test" onClick={openPost} className={classes.cardAction}>
         <CardMedia
           className={classes.media}
-          image={
-            // 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
-            '/img/tree.jpg'
-          }
+          image={`${DB_ROUTE}/img/memories/${post.postImage}`}
           title={'eid'}
         />
 

@@ -1,12 +1,15 @@
+import fs from 'fs';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
+
 import User from '../models/user';
+import PostMessage from '../models/post.js';
 
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';
 
-import PostMessage from '../models/post.js';
 
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -74,52 +77,62 @@ export const signup = catchAsync(async (req, res, next) => {
 
 });
 
-export const getUserPosts = catchAsync(async (req, res, next) => {
+const filterObj = (obj, ...allowedFields) => {
+    const newObj = {};
+    Object.keys(obj).forEach(el => {
+        if (allowedFields.includes(el)) newObj[el] = obj[el];
+    });
+    return newObj;
+};
 
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id))
-        return next(new Apperror("User id is not valid", 400));
 
-    const posts = await PostMessage.find({ creater: id }).sort({ _id: -1 });
-    res.status(200).json({ posts });
+export const updateMe = catchAsync(async (req, res, next) => {
 
+    console.log(req.body);
+
+    const filteredBody = filterObj(req.body, 'firstName', "lastName", 'email');
+    if (req.file) filteredBody.userImage = req.file.filename;
+
+    const user = await User.findById(req.userId);
+
+    if (req.file && user.userImage !== 'user.png')
+        fs.unlink(`./public/img/users/${user.userImage}`, function (err) {
+            if (err) console.log(err);
+        })
+
+    filteredBody.name = filteredBody.firstName + ' ' + filteredBody.lastName;
+
+    const updatedUser = await User.findByIdAndUpdate(req.userId, filteredBody, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(200).json({ userData: updatedUser });
 })
 
-export const savePost = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const post = req.body.post;
-    const postId = post._id;
-    const oldUser = await User.findById(id);
+export const updatePassword = catchAsync(async (req, res, next) => {
+    const { passwordCurrent, password, confirmPassword } = req.body;
 
-    if (!oldUser) return next(new AppError("user not found", 400));
+    const oldUser = await User.findById(req.userId);
 
-    if (oldUser.savedPosts.includes(postId)) oldUser.savedPosts.remove(postId);
-    else oldUser.savedPosts.push(postId);
+    const isPasswordCorrect = await bcrypt.compare(passwordCurrent, oldUser.password)
 
-    oldUser.save();
+    if (!isPasswordCorrect) {
+        return next(new AppError("Current password is wrong", 400));
+    }
 
-    res.status(200).json({
-        status: "success",
-        savedPost: post
-    });
-});
+    if (password !== confirmPassword) return next(new AppError("Passwords and confirm password are not the same", 400));
 
-export const getSavedPosts = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    let user = await User.findById(id);
-    if (!user) return next(new AppError("user not found", 400));
+    const user = await User.findByIdAndUpdate(req.userId, { password: hashedPassword }, {
+        runValidators: true,
+        new: true
+    })
 
-    const savedIds = user.savedPosts;
+    const token = signToken(req.userId);
 
-    user = await User.findById(id).populate({
-        path: 'savedPosts',
-        select: '-__v'
-    });
+    res.status(200).json({ userData: user, token });
 
-    res.status(200).json({
-        status: "success",
-        savedPosts: user.savedPosts,
-        savedIds
-    });
-});
+
+})

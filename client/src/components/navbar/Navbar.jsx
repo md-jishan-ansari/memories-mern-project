@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Box } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { TemplateContext } from '../../template/TemplateProvider';
 
-import { getSavedPosts } from '../../redux/actions/postActions';
+import { getSavedPosts, getUserPosts } from '../../redux/actions/postActions';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,7 +21,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (ctx?.user) dispatch(getSavedPosts(ctx?.user?.userData?._id));
+    if (ctx?.user) {
+      dispatch(getSavedPosts(ctx?.user?.userData?._id));
+      dispatch(getUserPosts(ctx?.user?.userData?._id));
+    }
   }, [ctx?.user]);
 
   return (

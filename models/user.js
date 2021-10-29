@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        userImage: {
+            type: String,
+            default: "user-default.png"
+        },
         savedPosts: [
             {
                 type: mongoose.Schema.ObjectId,

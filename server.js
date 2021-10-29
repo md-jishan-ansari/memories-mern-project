@@ -22,6 +22,8 @@ dotenv.config({ path: './config.env' });
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, '/public')));
+
 app.use(express.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());

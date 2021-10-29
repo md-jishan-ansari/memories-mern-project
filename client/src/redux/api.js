@@ -22,9 +22,11 @@ export const likePost = ({ postId, userId }) => Api.patch('/api/v1/posts/post', 
 export const updatePost = (id, updatedPost) => Api.patch(`/api/v1/posts/${id}`, updatedPost);
 export const addComment = (id, comment) => Api.patch(`/api/v1/posts/${id}/comment`, { comment });
 
+export const getUserPosts = (id) => Api.get(`/api/v1/posts/userPosts/${id}`);
+export const savePost = (userId, post) => Api.patch(`/api/v1/posts/savePost/${userId}`, { post });
+export const getSavedPosts = (id) => Api.get(`/api/v1/posts/savedPosts/${id}`);
 
 export const login = (userData) => Api.post('/api/v1/user/login', userData);
 export const signup = (userData) => Api.post('/api/v1/user/signup', userData);
-export const getUserPosts = (id) => Api.get(`/api/v1/user/userPosts/${id}`);
-export const savePost = (userId, post) => Api.patch(`/api/v1/user/savePost/${userId}`, { post });
-export const getSavedPosts = (id) => Api.get(`/api/v1/user/savedPosts/${id}`);
+export const updateMe = (userData) => Api.patch('/api/v1/user/updateMe', userData);
+export const updatePassword = (userData) => Api.patch('/api/v1/user/updatePassword', userData);

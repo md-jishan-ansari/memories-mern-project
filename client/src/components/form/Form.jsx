@@ -1,26 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Paper, Typography, TextField, Button } from '@material-ui/core';
+import { Paper, Typography, TextField, Button, InputAdornment } from '@material-ui/core';
 import ChipInput from 'material-ui-chip-input';
 import { TemplateContext } from '../../template/TemplateProvider';
+
+import ImageIcon from '@mui/icons-material/Image';
 
 import useStyles from './styles';
 
 import { createPost, updatePost } from '../../redux/actions/postActions.js';
 
-const initialPostData = {
-  title: '',
-  message: '',
-  tags: [],
-  creater: '',
-  createrName: '',
-};
-
 const Form = ({ currentId, setCurrentId }) => {
   const ctx = useContext(TemplateContext);
   const history = useHistory();
   const classes = useStyles();
+
+  const initialPostData = {
+    title: '',
+    message: '',
+    tags: [],
+    creater: ctx.user?.userData._id,
+    createrName: ctx.user?.userData.name,
+    postImage: null,
+  };
+
   const [postData, setPostData] = useState(initialPostData);
   const dispatch = useDispatch();
 
@@ -34,11 +38,20 @@ const Form = ({ currentId, setCurrentId }) => {
   };
 
   useEffect(() => {
-    if (post) setPostData(post);
+    if (post) {
+      setPostData({
+        title: post.title,
+        message: post.message,
+        tags: post.tags,
+        postImage: post.postImage,
+      });
+    }
   }, [post]);
 
   const onChangeHandler = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
+    if (e.target.name === 'postImage')
+      setPostData({ ...postData, [e.target.name]: e.target.files[0] });
+    else setPostData({ ...postData, [e.target.name]: e.target.value });
   };
 
   const handleAddChip = (chip) => {
@@ -53,17 +66,19 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    for (let x in postData) {
+      if (x === 'tags') {
+        postData[x].forEach((item) => formData.append('tags[]', item));
+      } else formData.append(x, postData[x]);
+    }
+
     if (currentId) {
-      dispatch(updatePost(post._id, postData));
+      dispatch(updatePost(post._id, formData));
       setCurrentId(0);
     } else {
-      dispatch(
-        createPost({
-          ...postData,
-          creater: ctx.user?.userData._id || ctx.user?.userData.googleId,
-          createrName: ctx.user?.userData.name,
-        })
-      );
+      dispatch(createPost(formData));
     }
     clear();
   };
@@ -109,6 +124,22 @@ const Form = ({ currentId, setCurrentId }) => {
               variant="outlined"
               onAdd={(chip) => handleAddChip(chip)}
               onDelete={(chip) => handleDeleteChip(chip)}
+            />
+
+            <TextField
+              name="postImage"
+              label="Choose an Image"
+              type="file"
+              onChange={onChangeHandler}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ImageIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button variant="contained" color="primary" type="submit" fullWidth>
               {currentId ? 'Update' : 'Create'}

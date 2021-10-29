@@ -8,6 +8,10 @@ const postSchema = mongoose.Schema({
     tags: [String],
     likes: { type: [String], default: [] },
     comments: { type: [String], default: [] },
+    postImage: {
+        type: String,
+        default: 'Default-Image.jpg'
+    },
     createdAt: {
         type: Date,
         default: new Date(),

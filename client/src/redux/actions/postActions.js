@@ -95,7 +95,7 @@ export const createPost = (post) => async (dispatch) => {
 
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
     }
 }
 
@@ -114,11 +114,13 @@ export const deletePost = (id) => async (dispatch) => {
 export const updatePost = (id, updatedPost) => async (dispatch) => {
     try {
         dispatch({ type: START_LOADING });
+
         const { data } = await api.updatePost(id, updatedPost);
+        console.log("postActions", data);
         dispatch({ type: UPDATE_POST_SUCCESS, payload: data });
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
     }
 }
 

@@ -2,13 +2,13 @@ import express from 'express';
 
 const router = express.Router();
 
-import { createPost, getPosts, getPost, getPostBySearch, deletePost, updatePost, likePost, addComment } from '../controllers/postsController.js';
-import auth from '../controllers/middleware.js';
+import { createPost, getPosts, getPost, getPostBySearch, deletePost, updatePost, likePost, addComment, getUserPosts, savePost, getSavedPosts } from '../controllers/postsController.js';
+import auth, { uploadPostImage, resizePostImage } from '../controllers/middleware.js';
 
 router
     .route('/')
     .get(getPosts)
-    .post(auth, createPost)
+    .post(auth, uploadPostImage, resizePostImage, createPost)
     .delete(deletePost);
 
 router
@@ -22,10 +22,15 @@ router
 router
     .route('/:id')
     .get(getPost)
-    .patch(updatePost);
+    .patch(auth, uploadPostImage, resizePostImage, updatePost);
 
 router
     .route('/:id/comment')
     .patch(addComment);
+
+router.patch('/savePost/:id', savePost);
+
+router.get('/userPosts/:id', getUserPosts);
+router.get('/savedPosts/:id', getSavedPosts);
 
 export default router;

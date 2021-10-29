@@ -1,4 +1,4 @@
-import { AUTH, LOGOUT, } from '../constants/userConstants';
+import { AUTH, LOGOUT, UPDATE_ME } from '../constants/userConstants';
 
 export const userReducer = (state = { user: {} }, action) => {
     switch (action.type) {
@@ -8,6 +8,11 @@ export const userReducer = (state = { user: {} }, action) => {
         case LOGOUT:
             localStorage.removeItem('profile');
             return { ...state };
+        case UPDATE_ME:
+            let profile = JSON.parse(localStorage.getItem('profile'));
+            profile.userData = action.payload.userData;
+            localStorage.setItem("profile", JSON.stringify(profile));
+            return { ...state, user: action.payload }
         default: return state;
     }
 }

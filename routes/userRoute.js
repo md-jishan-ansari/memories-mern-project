@@ -2,14 +2,13 @@ import express from 'express';
 
 const router = express.Router();
 
-import { login, signup, getUserPosts, savePost, getSavedPosts } from '../controllers/userController';
+import { login, signup, updateMe, updatePassword } from '../controllers/userController';
+import auth, { uploadUserPhoto, resizeUserPhoto } from '../controllers/middleware';
 
 router.post('/login', login);
 router.post('/signup', signup);
 
-router.patch('/savePost/:id', savePost);
-
-router.get('/userPosts/:id', getUserPosts);
-router.get('/savedPosts/:id', getSavedPosts);
+router.patch('/updateMe', auth, uploadUserPhoto, resizeUserPhoto, updateMe);
+router.patch('/updatePassword', auth, updatePassword);
 
 export default router;

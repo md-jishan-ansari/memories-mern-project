@@ -8,6 +8,9 @@ import { Box, Button, Typography, Avatar, Menu, MenuItem } from '@material-ui/co
 
 import { TemplateContext } from '../../template/TemplateProvider';
 
+import variable from '../../config.js';
+const { DB_ROUTE } = variable;
+
 const NavbarButton = () => {
   const classes = useStyle();
   const dispatch = useDispatch();
@@ -46,7 +49,12 @@ const NavbarButton = () => {
         log out
       </Button>
       <Button onClick={handleClick} className={classes.userButton}>
-        <Avatar className={classes.avatar}>{ctx.user?.userData?.name.charAt(0)}</Avatar>
+        <Avatar
+          className={classes.avatar}
+          src={`${DB_ROUTE}/img/users/${ctx.user?.userData?.userImage}`}
+        >
+          {ctx.user?.userData?.name.charAt(0)}
+        </Avatar>
         <Typography variant="h6">{ctx.user?.userData?.name.split(' ')[0]}</Typography>
       </Button>
 

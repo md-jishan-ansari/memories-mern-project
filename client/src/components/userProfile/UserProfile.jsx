@@ -7,7 +7,10 @@ import { AccountCircle } from '@mui/icons-material';
 
 import Input from '../auth/Input';
 import { TemplateContext } from '../../template/TemplateProvider';
-// import { updateUser, updatePassword } from '../../redux/actions/authanticationAction';
+import { updateMe, updatePassword } from '../../redux/actions/userActions';
+
+import variable from '../../config.js';
+const { DB_ROUTE } = variable;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const initialPasswordData = {
   passwordCurrent: '',
   password: '',
-  passwordConfirm: '',
+  confirmPassword: '',
 };
 
 export default function UserProfileData() {
@@ -59,14 +62,14 @@ export default function UserProfileData() {
 
   const [passwordData, setPasswordData] = useState(initialPasswordData);
   const [userData, setUserData] = useState({
-    name: ctx?.user?.userData?.name,
+    firstName: ctx?.user?.userData?.firstName,
+    lastName: ctx?.user?.userData?.lastName,
     email: ctx?.user?.userData?.email,
-    photo: null,
+    userImage: null,
   });
   const [image, setImage] = useState(
-    ctx?.user?.userData?.photo && `/img/users/${ctx?.user?.userData?.photo}`
+    ctx?.user?.userData?.userImage && `${DB_ROUTE}/img/users/${ctx?.user?.userData?.userImage}`
   );
-  // console.log(ctx?.user?.userData?.photo, image);s
 
   const [passwordType, setPasswordType] = useState('password');
   const classes = useStyles();
@@ -74,7 +77,7 @@ export default function UserProfileData() {
   const dispatch = useDispatch();
 
   const handleUserChange = (e) => {
-    if (e.target.name === 'photo') {
+    if (e.target.name === 'userImage') {
       setUserData({ ...userData, [e.target.name]: e.target.files[0] });
       setImage(URL.createObjectURL(e.target.files[0]));
     } else {
@@ -89,21 +92,17 @@ export default function UserProfileData() {
   const submitUserDataHandler = (e) => {
     e.preventDefault();
     const formData = new FormData();
-
     for (let x in userData) {
       formData.append(x, userData[x]);
     }
 
-    // dispatch(updateUser(formData));
-
-    // ctx.userData.data.user.name = userData.name;
-    // ctx.setUserData({ ...ctx.userData });
+    dispatch(updateMe(formData));
   };
 
   const submitUpdatedPasswordHandler = (e) => {
     e.preventDefault();
-    // dispatch(updatePassword(passwordData));
-    // setPasswordData(initialPasswordData);
+    dispatch(updatePassword(passwordData));
+    setPasswordData(initialPasswordData);
   };
 
   return (
@@ -116,25 +115,34 @@ export default function UserProfileData() {
             </Typography>
             <Grid container spacing={2}>
               <Input
-                name="name"
-                label="Your Name"
-                value={userData.name}
+                name="firstName"
+                label="First Name"
+                half
+                value={userData.firstName}
                 type="text"
-                handleChange={handleUserChange}
+                ChangeHandler={handleUserChange}
+              />
+              <Input
+                name="lastName"
+                label="Last Name"
+                half
+                value={userData.lastName}
+                type="text"
+                ChangeHandler={handleUserChange}
               />
               <Input
                 name="email"
                 label="Your Email"
                 value={userData.email}
                 type="text"
-                handleChange={handleUserChange}
+                ChangeHandler={handleUserChange}
               />
               <Grid item className={classes.photoInput}>
                 <Avatar className={classes.avatar} src={image} />
                 <TextField
                   id="input-with-icon-textfield"
                   type="file"
-                  name="photo"
+                  name="userImage"
                   label="Choose new photo"
                   size="medium"
                   variant="standard"
@@ -169,25 +177,25 @@ export default function UserProfileData() {
             <Input
               name="passwordCurrent"
               label="Current password"
-              value={userData.currentPassword}
+              value={passwordData.passwordCurrent}
               type="password"
-              handleChange={handlePasswordChange}
+              ChangeHandler={handlePasswordChange}
             />
             <Input
               name="password"
               label="Password"
-              value={userData.password}
+              value={passwordData.password}
               type={passwordType}
               setPasswordType={setPasswordType}
-              handleChange={handlePasswordChange}
+              ChangeHandler={handlePasswordChange}
             />
 
             <Input
-              name="passwordConfirm"
+              name="confirmPassword"
               label="Confirm Password"
-              value={userData.passwordConfirm}
+              value={passwordData.confirmPassword}
               type="password"
-              handleChange={handlePasswordChange}
+              ChangeHandler={handlePasswordChange}
             />
           </Grid>
           <Button type="submit" variant="contained" color="primary" className={classes.button}>
