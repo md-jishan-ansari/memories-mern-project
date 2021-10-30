@@ -8,6 +8,8 @@ import { LockOutlined } from '@material-ui/icons';
 import useStyles from './styles';
 import Input from './Input';
 
+import { resetPassword } from '../../redux/actions/userActions.js';
+
 const initialUserData = {
   password: '',
   confirmPassword: '',
@@ -37,8 +39,8 @@ const Auth = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    console.log(userData);
-    console.log(token);
+    dispatch(resetPassword(userData, token, history));
+    setUserData(initialUserData);
   };
 
   return (

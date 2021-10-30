@@ -87,8 +87,8 @@ const Form = ({ currentId, setCurrentId }) => {
     <>
       {!ctx.user ? (
         <Paper className={classes.formContainer} elevation={6}>
-          <Typography variant="h5">
-            Please Signin to create your own Memories, like other memories
+          <Typography variant="h5" style={{ textAlign: 'center' }}>
+            Please Signin to create your own Memories, like and save other memories
           </Typography>
         </Paper>
       ) : (

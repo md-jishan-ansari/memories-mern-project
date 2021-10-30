@@ -50,6 +50,7 @@ const NavbarButton = () => {
       </Button>
       <Button onClick={handleClick} className={classes.userButton}>
         <Avatar
+          style={{ backgroundColor: 'purple', marginRight: 5 }}
           className={classes.avatar}
           src={`${DB_ROUTE}/img/users/${ctx.user?.userData?.userImage}`}
         >
@@ -101,6 +102,7 @@ const NavbarButton = () => {
         variant="contained"
         color="primary"
         className={classes.signinButton}
+        style={{ marginRight: '10px', borderRadius: '3px' }}
       >
         sign in
       </Button>

@@ -9,8 +9,8 @@ const auth = async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
-            console.log("you are not logged in! Please login to get access.");
-            return res.status(400).json({ message: "Yu are not logged in Please login to get access." });
+            // console.log("you are not logged in! Please login to get access.");
+            return res.status(400).json({ message: "You are not logged in Please login to get access." });
         }
         // console.log(token);
         const isCustomAuth = token?.length < 500;

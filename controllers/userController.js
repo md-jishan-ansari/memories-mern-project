@@ -2,6 +2,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 
 import User from '../models/user';
@@ -9,6 +10,7 @@ import PostMessage from '../models/post.js';
 
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';
+import Email from '../utils/email';
 
 
 const signToken = (id) => {
@@ -88,7 +90,7 @@ const filterObj = (obj, ...allowedFields) => {
 
 export const updateMe = catchAsync(async (req, res, next) => {
 
-    console.log(req.body);
+    // console.log(req.body);
 
     const filteredBody = filterObj(req.body, 'firstName', "lastName", 'email');
     if (req.file) filteredBody.userImage = req.file.filename;
@@ -125,14 +127,79 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await User.findByIdAndUpdate(req.userId, { password: hashedPassword }, {
-        runValidators: true,
-        new: true
-    })
+    oldUser.password = hashedPassword;
+    oldUser.save();
 
     const token = signToken(req.userId);
 
-    res.status(200).json({ userData: user, token });
-
+    res.status(200).json({ userData: oldUser, token });
 
 })
+
+export const forgotPassword = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return next(new AppError("There is no user with email address", 404));
+    }
+
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    let resetURL;
+    if (process.env.NODE_ENV !== 'production')
+        resetURL = `http://localhost:3000/user/resetPassword/${resetToken}`;
+    else
+        resetURL = `${req.protocol}://${req.get('host')}/user/resetPassword/${resetToken}`;
+
+    try {
+        await new Email(user, resetURL).sendPasswordReset();
+
+        // await sendEmail({
+        //     email: user.email,
+        //     subject: 'Your password reset token (valid for 10 min',
+        //     message
+        // });
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Token send to email'
+        });
+    } catch (err) {
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        return next(
+            new AppError('There was an error sending the email. Try again later!', 500)
+        );
+    }
+})
+
+export const resetPassword = catchAsync(async (req, res, next) => {
+    // console.log(req.body);
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(req.params.token)
+        .digest('hex');
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+        return next(new AppError('Token is invalid or has expired', 400));
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+        return next(new AppError('password and confirm password are not the same', 400));
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    user.password = hashedPassword;
+    user.save();
+
+    const token = signToken(req.userId);
+
+    res.status(200).json({ token });
+});

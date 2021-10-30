@@ -33,9 +33,8 @@ export const postsReducer = (state = { posts: [], currentPage: 1, numberOfPages:
                 posts: action.payload.data,
             }
         case CREATE_POST_SUCCESS:
-            return { ...state, posts: [action.payload, ...state.posts.slice(0, state.posts.length - 1)], userPosts: [action.payload, ...state.userPosts] }
+            return { ...state, posts: [action.payload, ...state.posts.slice(0, state.posts.length === 8 ? (state.posts.length - 1) : state.posts.length)], userPosts: [action.payload, ...state.userPosts] }
         case UPDATE_POST_SUCCESS:
-            console.log("postReducers:-", action.payload);
             return {
                 ...state,
                 posts: state.posts.map(post => post._id === action.payload.post._id ? action.payload.post : post),

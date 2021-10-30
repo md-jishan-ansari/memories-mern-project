@@ -147,7 +147,7 @@ const Post = ({ post, setCurrentId }) => {
             &nbsp;delete
           </Button>
         ) : (
-          <Button size="small" color="primary" onClick={savePostHandler}>
+          <Button size="small" color="primary" disabled={!userId} onClick={savePostHandler}>
             {isSaved ? <BookmarkAdded /> : <BookmarkBorder />}
           </Button>
         )}

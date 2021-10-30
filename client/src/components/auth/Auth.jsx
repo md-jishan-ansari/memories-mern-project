@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Paper, Box, Typography, Button, Grid } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
 
-import { login, signup } from '../../redux/actions/userActions.js';
+import { login, signup, forgotPassword } from '../../redux/actions/userActions.js';
 
 import useStyles from './styles';
 import Input from './Input';
@@ -57,6 +57,8 @@ const Auth = () => {
       dispatch(
         signup({ ...userData, name: userData.firstName + ' ' + userData.lastName }, history)
       );
+    } else if (isForgotPassword) {
+      dispatch(forgotPassword({ email: userData.email }));
     } else {
       dispatch(login(userData, history));
     }

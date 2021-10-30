@@ -30,3 +30,5 @@ export const login = (userData) => Api.post('/api/v1/user/login', userData);
 export const signup = (userData) => Api.post('/api/v1/user/signup', userData);
 export const updateMe = (userData) => Api.patch('/api/v1/user/updateMe', userData);
 export const updatePassword = (userData) => Api.patch('/api/v1/user/updatePassword', userData);
+export const forgotPassword = (userData) => Api.patch('/api/v1/user/forgotPassword', userData);
+export const resetPassword = (userData, token) => Api.patch(`/api/v1/user/resetPassword/${token}`, userData);

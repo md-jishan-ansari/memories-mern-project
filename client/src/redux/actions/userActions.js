@@ -47,3 +47,25 @@ export const updatePassword = (userData) => async (dispatch) => {
         Alert(ERROR, error.response.data.message);
     }
 }
+
+export const forgotPassword = (userData) => async (dispatch) => {
+    try {
+        const { data } = await api.forgotPassword(userData);
+        Alert(SUCCESS, "Token send to your email");
+
+    } catch (error) {
+
+        Alert(ERROR, error.response.data.message);
+    }
+}
+
+export const resetPassword = (userData, token, history) => async (dispatch) => {
+    try {
+        await api.resetPassword(userData, token);
+        Alert(SUCCESS, "password reset successful");
+        history.push('/user/login');
+    } catch (error) {
+        Alert(ERROR, error.response.data.message);
+    }
+}
+
