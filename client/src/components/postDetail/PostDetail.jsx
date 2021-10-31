@@ -11,9 +11,6 @@ import { getPost, getPostBySearch } from '../../redux/actions/postActions';
 import SuggestionCard from './SuggestionCard';
 import CommentSection from './CommentSection';
 
-import variable from '../../config.js';
-const { DB_ROUTE } = variable;
-
 const PostDetail = () => {
   const classes = useStyles();
   const params = useParams();
@@ -69,7 +66,7 @@ const PostDetail = () => {
 
         <Grid item lg={8} md={7}>
           <Box className={classes.image}>
-            <img src={`${DB_ROUTE}/img/memories/${post.postImage}`} alt="memories Pic" />
+            <img src={post.postImage} alt="memories Pic" />
           </Box>
         </Grid>
 

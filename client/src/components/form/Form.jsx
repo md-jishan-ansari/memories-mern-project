@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Paper, Typography, TextField, Button, InputAdornment } from '@material-ui/core';
 import ChipInput from 'material-ui-chip-input';
@@ -13,7 +12,6 @@ import { createPost, updatePost } from '../../redux/actions/postActions.js';
 
 const Form = ({ currentId, setCurrentId }) => {
   const ctx = useContext(TemplateContext);
-  const history = useHistory();
   const classes = useStyles();
 
   const initialPostData = {

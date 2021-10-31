@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import useStyle from './styles';
@@ -7,9 +7,6 @@ import useStyle from './styles';
 import { Box, Button, Typography, Avatar, Menu, MenuItem } from '@material-ui/core';
 
 import { TemplateContext } from '../../template/TemplateProvider';
-
-import variable from '../../config.js';
-const { DB_ROUTE } = variable;
 
 const NavbarButton = () => {
   const classes = useStyle();
@@ -52,7 +49,7 @@ const NavbarButton = () => {
         <Avatar
           style={{ backgroundColor: 'purple', marginRight: 5 }}
           className={classes.avatar}
-          src={`${ctx.user?.userData?.userImage}`}
+          src={ctx.user?.userData?.userImage}
         >
           {ctx.user?.userData?.name.charAt(0)}
         </Avatar>

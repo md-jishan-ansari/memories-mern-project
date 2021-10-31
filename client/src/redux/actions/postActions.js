@@ -15,7 +15,7 @@ import {
 
 // import { SUCCESS, WARNING, ERROR, INFO } from '../constants/userConstants';
 
-import { Alert } from '../Alert';
+// import { Alert } from '../Alert';
 
 export const getPost = (id) => async (dispatch) => {
     try {

@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, makeStyles, Paper, Typography, CircularProgress } from '@material-ui/core';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import { getUserPosts } from '../../redux/actions/postActions';
 
 // import { TemplateContext } from '../../template/TemplateProvider';

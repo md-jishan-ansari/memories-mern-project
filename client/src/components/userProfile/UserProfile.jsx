@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box, Typography, Grid, Divider, Card, Hidden } from '@mui/material';
+import { Typography, Grid, Divider, Card, Hidden } from '@mui/material';
 import { Button, TextField, InputAdornment, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { AccountCircle } from '@mui/icons-material';
@@ -8,9 +8,6 @@ import { AccountCircle } from '@mui/icons-material';
 import Input from '../auth/Input';
 import { TemplateContext } from '../../template/TemplateProvider';
 import { updateMe, updatePassword } from '../../redux/actions/userActions';
-
-import variable from '../../config.js';
-const { DB_ROUTE } = variable;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -68,7 +65,7 @@ export default function UserProfileData() {
     userImage: ctx?.user?.userData?.userImage,
   });
   const [image, setImage] = useState(
-    ctx?.user?.userData?.userImage && `${DB_ROUTE}/img/users/${ctx?.user?.userData?.userImage}`
+    ctx?.user?.userData?.userImage && ctx?.user?.userData?.userImage
   );
 
   const [passwordType, setPasswordType] = useState('password');
@@ -95,8 +92,8 @@ export default function UserProfileData() {
     for (let x in userData) {
       formData.append(x, userData[x]);
     }
-
     dispatch(updateMe(formData));
+    window.location.reload();
   };
 
   const submitUpdatedPasswordHandler = (e) => {

@@ -1,6 +1,6 @@
 import * as api from '../api';
 
-import { AUTH, UPDATE_ME, SUCCESS, WARNING, ERROR, INFO } from '../constants/userConstants';
+import { AUTH, UPDATE_ME, SUCCESS, ERROR, INFO } from '../constants/userConstants';
 
 
 import { Alert } from '../Alert';
@@ -51,7 +51,7 @@ export const updatePassword = (userData) => async (dispatch) => {
 export const forgotPassword = (userData) => async (dispatch) => {
     try {
         Alert(INFO, "Please wait! Your data is processed...");
-        const { data } = await api.forgotPassword(userData);
+        await api.forgotPassword(userData);
         Alert(SUCCESS, "Token send to your email");
 
     } catch (error) {

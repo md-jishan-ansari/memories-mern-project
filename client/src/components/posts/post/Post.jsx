@@ -31,9 +31,6 @@ import { deletePost, likePost, savePost } from '../../../redux/actions/postActio
 
 import { TemplateContext } from '../../../template/TemplateProvider';
 
-import variable from '../../../config.js';
-const { DB_ROUTE } = variable;
-
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
   const ctx = useContext(TemplateContext);
