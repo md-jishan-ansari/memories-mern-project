@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import multer from 'multer';
-import sharp from 'sharp';
+import path from 'path';
+
+import cloudinary from '../utils/cloudinary';
 
 import AppError from '../utils/appError';
 import { catchAsync } from '../utils/catchAsync';
@@ -35,9 +37,6 @@ const auth = async (req, res, next) => {
     }
 };
 
-
-const multerStorage = multer.memoryStorage();
-
 const multerFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image')) {
         cb(null, true)
@@ -47,43 +46,43 @@ const multerFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-    storage: multerStorage,
+    storage: multer.diskStorage({}),
     fileFilter: multerFilter,
 });
 
-export const uploadUserPhoto = upload.single('userImage');
-
-export const resizeUserPhoto = catchAsync(async (req, res, next) => {
-    if (!req.file) return next();
-
-    req.file.filename = `user-${req.userId}-${Date.now()}.jpeg`;
-
-    await sharp(req.file.buffer)
-        .resize(500, 500)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/users/${req.file.filename}`);
-
-    next();
-})
+export const uploadUserImage = upload.single('userImage');
 
 export const uploadPostImage = upload.single('postImage');
 
-export const resizePostImage = catchAsync(async (req, res, next) => {
-    if (!req.file) return next();
+export const uploadedUserCloudinary = catchAsync(async (req, res, next) => {
+    if (!req.file) next();
 
-    req.file.filename = `post-${req.userId}-${Date.now()}.jpeg`;
+    const result = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: 'memories_users',
+        transformation: [
+            { width: 500, height: 500, crop: "fill" },
+            { quality: "auto" }
+        ]
+    });
 
-    await sharp(req.file.buffer)
-        .resize(2000, 1333)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/memories/${req.file.filename}`);
-
+    req.result = result;
     next();
-})
+});
 
+export const uploadedPostCloudinary = catchAsync(async (req, res, next) => {
+    if (!req.file) next();
 
+    const result = await cloudinary.uploader.upload(req.file.path, {
+        upload_preset: 'memories_posts',
+        transformation: [
+            { width: 2000, height: 1333, crop: "fill" },
+            { quality: "auto" }
+        ]
+    });
+
+    req.result = result;
+    next();
+});
 
 export default auth;
 

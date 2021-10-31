@@ -26,6 +26,9 @@ const userSchema = mongoose.Schema(
         userImage: {
             type: String
         },
+        cloudinary_id: {
+            type: String
+        },
         savedPosts: [
             {
                 type: mongoose.Schema.ObjectId,

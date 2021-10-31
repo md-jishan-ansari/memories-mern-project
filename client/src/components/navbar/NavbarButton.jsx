@@ -52,7 +52,7 @@ const NavbarButton = () => {
         <Avatar
           style={{ backgroundColor: 'purple', marginRight: 5 }}
           className={classes.avatar}
-          src={`${DB_ROUTE}/img/users/${ctx.user?.userData?.userImage}`}
+          src={`${ctx.user?.userData?.userImage}`}
         >
           {ctx.user?.userData?.name.charAt(0)}
         </Avatar>

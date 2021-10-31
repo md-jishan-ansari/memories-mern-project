@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import cloudinary from '../utils/cloudinary';
+
 
 
 import User from '../models/user';
@@ -90,17 +92,17 @@ const filterObj = (obj, ...allowedFields) => {
 
 export const updateMe = catchAsync(async (req, res, next) => {
 
-    // console.log(req.body);
-
     const filteredBody = filterObj(req.body, 'firstName', "lastName", 'email');
-    if (req.file) filteredBody.userImage = req.file.filename;
+    if (req.file) {
+        filteredBody.userImage = req.result.secure_url;
+        filteredBody.cloudinary_id = req.result.public_id;
+    }
 
     const user = await User.findById(req.userId);
 
-    if (req.file && user.userImage)
-        fs.unlink(`./public/img/users/${user.userImage}`, function (err) {
-            if (err) console.log(err);
-        })
+    if (req.file && user.cloudinary_id) {
+        await cloudinary.uploader.destroy(user.cloudinary_id);
+    }
 
     filteredBody.name = filteredBody.firstName + ' ' + filteredBody.lastName;
 

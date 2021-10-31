@@ -44,6 +44,7 @@ const server = app.listen(port, () => {
 });
 
 
+
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/user', userRouter);
 

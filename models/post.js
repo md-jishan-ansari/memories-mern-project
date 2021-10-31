@@ -12,6 +12,9 @@ const postSchema = mongoose.Schema({
         type: String,
         default: 'Default-Image.jpg'
     },
+    cloudinary_id: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: new Date(),

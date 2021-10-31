@@ -118,11 +118,7 @@ const Post = ({ post, setCurrentId }) => {
       )}
 
       <ButtonBase component="span" name="test" onClick={openPost} className={classes.cardAction}>
-        <CardMedia
-          className={classes.media}
-          image={`${DB_ROUTE}/img/memories/${post.postImage}`}
-          title={'eid'}
-        />
+        <CardMedia className={classes.media} image={`${post.postImage}`} title={'eid'} />
 
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="h2">

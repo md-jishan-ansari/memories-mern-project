@@ -1,5 +1,7 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
+import cloudinary from '../utils/cloudinary';
+import path from 'path';
 
 import User from '../models/user';
 import PostMessage from '../models/post.js';
@@ -48,11 +50,14 @@ export const getPostBySearch = catchAsync(async (req, res, next) => {
 
 export const createPost = catchAsync(async (req, res, next) => {
 
-    if (req.file)
-        req.body.postImage = req.file.filename;
-    else req.body.postImage = "Default-Image.jpg";
+    let cloudinary_id = "", postImage = "";
+    if (req.file) {
+        cloudinary_id = req.result.public_id;
+        postImage = req.result.secure_url;
+    }
+    else postImage = "Default-Image.jpg";
 
-    const data = await PostMessage.create({ ...req.body, createdAt: new Date().toISOString() });
+    const data = await PostMessage.create({ ...req.body, createdAt: new Date().toISOString(), cloudinary_id, postImage });
     res.status(201).json({
         status: 'success',
         data,
@@ -66,7 +71,13 @@ export const deletePost = catchAsync(async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(req.body.id))
         return next(new AppError('id is not valid', 400));
 
-    await PostMessage.findByIdAndRemove(req.body.id);
+    let post = await PostMessage.findById(req.body.id);
+
+    if (post.cloudinary_id) {
+        await cloudinary.uploader.destroy(post.cloudinary_id);
+    }
+    await post.remove();
+
     res.status(200).json({
         status: "success",
     })
@@ -79,16 +90,15 @@ export const updatePost = catchAsync(async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(id))
         return next(new AppError('id is not valid', 400));
 
-    if (req.file)
-        req.body.postImage = req.file.filename;
-
-
     const oldPost = await PostMessage.findById(id);
 
-    if (req.file && oldPost.postImage !== 'Default-Image.jpg')
-        fs.unlink(`./public/img/memories/${oldPost.postImage}`, function (err) {
-            if (err) console.log(err);
-        })
+    if (req.file) {
+        if (oldPost.cloudinary_id) {
+            await cloudinary.uploader.destroy(oldPost.cloudinary_id);
+        }
+        req.body.cloudinary_id = req.result.public_id;
+        req.body.postImage = req.result.secure_url;
+    }
 
     const post = await PostMessage.findByIdAndUpdate(id, req.body, { new: true });
 
