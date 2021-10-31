@@ -24,8 +24,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         userImage: {
-            type: String,
-            default: "user-default.png"
+            type: String
         },
         savedPosts: [
             {

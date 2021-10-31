@@ -97,7 +97,7 @@ export const updateMe = catchAsync(async (req, res, next) => {
 
     const user = await User.findById(req.userId);
 
-    if (req.file && user.userImage !== 'user.png')
+    if (req.file && user.userImage)
         fs.unlink(`./public/img/users/${user.userImage}`, function (err) {
             if (err) console.log(err);
         })

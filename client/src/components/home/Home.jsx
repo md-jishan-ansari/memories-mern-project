@@ -87,7 +87,7 @@ const Home = () => {
           />
           <ChipInput
             name="searchTags"
-            label="Tags"
+            label="Tags (seperated by Enter key)"
             fullWidth
             value={tags}
             variant="outlined"

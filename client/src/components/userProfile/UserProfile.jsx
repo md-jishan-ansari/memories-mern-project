@@ -65,7 +65,7 @@ export default function UserProfileData() {
     firstName: ctx?.user?.userData?.firstName,
     lastName: ctx?.user?.userData?.lastName,
     email: ctx?.user?.userData?.email,
-    userImage: null,
+    userImage: ctx?.user?.userData?.userImage,
   });
   const [image, setImage] = useState(
     ctx?.user?.userData?.userImage && `${DB_ROUTE}/img/users/${ctx?.user?.userData?.userImage}`

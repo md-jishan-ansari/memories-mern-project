@@ -118,7 +118,7 @@ const Form = ({ currentId, setCurrentId }) => {
 
             <ChipInput
               name="tags"
-              label="Tags"
+              label="Tags (seperated by Enter key)"
               fullWidth
               value={postData.tags}
               variant="outlined"
