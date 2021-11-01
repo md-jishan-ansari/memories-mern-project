@@ -54,10 +54,7 @@ const PostDetail = () => {
             <Typography>{moment(post.createdAt).fromNow()}</Typography>
           </Box>
           <Divider />
-          <Box style={{ padding: '15px 0' }}>
-            <Typography variant="h6">Realtime Chat - comming soon!</Typography>
-          </Box>
-          <Divider />
+
           <Grid container style={{ padding: '15px 0' }} spacing={2}>
             <CommentSection post={post} />
           </Grid>

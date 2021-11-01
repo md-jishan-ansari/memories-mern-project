@@ -52,7 +52,6 @@ const upload = multer({
 
 export const uploadUserImage = upload.single('userImage');
 
-export const uploadPostImage = upload.single('postImage');
 
 export const uploadedUserCloudinary = catchAsync(async (req, res, next) => {
     if (!req.file) {
@@ -70,6 +69,8 @@ export const uploadedUserCloudinary = catchAsync(async (req, res, next) => {
     req.result = result;
     next();
 });
+
+export const uploadPostImage = upload.single('postImage');
 
 export const uploadedPostCloudinary = catchAsync(async (req, res, next) => {
     if (!req.file) {
