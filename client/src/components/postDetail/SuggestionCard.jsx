@@ -32,7 +32,7 @@ const SuggestionCard = ({ id }) => {
             </Typography>
             <Typography>Likes: {post.likes.length}</Typography>
             <Box className={classes.suggestionImage}>
-              <img src="/img/tree.jpg" alt="suggetion" />
+              <img src={post.postImage} alt="suggetion" />
             </Box>
           </Card>
         </ButtonBase>
