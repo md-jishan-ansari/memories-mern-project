@@ -93,9 +93,6 @@ export default function UserProfileData() {
       formData.append(x, userData[x]);
     }
     dispatch(updateMe(formData));
-    setTimeout(function () {
-      window.location.reload();
-    }, 15000);
   };
 
   const submitUpdatedPasswordHandler = (e) => {
