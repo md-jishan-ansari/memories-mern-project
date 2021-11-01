@@ -29,6 +29,7 @@ export const signup = (userData, history) => async (dispatch) => {
 
 export const updateMe = (userData) => async (dispatch) => {
     try {
+        Alert(INFO, "Please wait! Your data is processed...");
         const { data } = await api.updateMe(userData);
         dispatch({ type: UPDATE_ME, payload: data });
         Alert(SUCCESS, "Update successfull!");
