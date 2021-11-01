@@ -1,14 +1,10 @@
-import fs from 'fs';
-import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import cloudinary from '../utils/cloudinary';
 
 
-
 import User from '../models/user';
-import PostMessage from '../models/post.js';
 
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';

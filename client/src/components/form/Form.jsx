@@ -24,6 +24,7 @@ const Form = ({ currentId, setCurrentId }) => {
   };
 
   const [postData, setPostData] = useState(initialPostData);
+  const [image, setimage] = useState('');
   const dispatch = useDispatch();
 
   const post = useSelector((state) =>
@@ -47,9 +48,11 @@ const Form = ({ currentId, setCurrentId }) => {
   }, [post]);
 
   const onChangeHandler = (e) => {
-    if (e.target.name === 'postImage')
+    if (e.target.name === 'postImage') {
       setPostData({ ...postData, [e.target.name]: e.target.files[0] });
-    else setPostData({ ...postData, [e.target.name]: e.target.value });
+      setimage(e.target.files.filename);
+    } else setPostData({ ...postData, [e.target.name]: e.target.value });
+    console.log(postData.postImage);
   };
 
   const handleAddChip = (chip) => {
@@ -78,6 +81,8 @@ const Form = ({ currentId, setCurrentId }) => {
     } else {
       dispatch(createPost(formData));
     }
+
+    setimage('');
     clear();
   };
 
@@ -131,6 +136,7 @@ const Form = ({ currentId, setCurrentId }) => {
               onChange={onChangeHandler}
               variant="outlined"
               fullWidth
+              value={image}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

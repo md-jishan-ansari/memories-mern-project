@@ -55,7 +55,9 @@ export const uploadUserImage = upload.single('userImage');
 export const uploadPostImage = upload.single('postImage');
 
 export const uploadedUserCloudinary = catchAsync(async (req, res, next) => {
-    if (!req.file) next();
+    if (!req.file) {
+        return next();
+    }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
         upload_preset: 'memories_users',
@@ -70,7 +72,9 @@ export const uploadedUserCloudinary = catchAsync(async (req, res, next) => {
 });
 
 export const uploadedPostCloudinary = catchAsync(async (req, res, next) => {
-    if (!req.file) next();
+    if (!req.file) {
+        return next();
+    }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
         upload_preset: 'memories_posts',
