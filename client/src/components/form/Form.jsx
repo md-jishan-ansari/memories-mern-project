@@ -18,8 +18,8 @@ const Form = ({ currentId, setCurrentId }) => {
     title: '',
     message: '',
     tags: [],
-    creater: ctx.user?.userData._id,
-    createrName: ctx.user?.userData.name,
+    creater: ctx.user?.userData?._id,
+    createrName: ctx.user?.userData?.name,
     postImage: null,
   };
 

@@ -24,7 +24,7 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
-import BookmarkAdded from '@mui/icons-material/BookmarkAdded';
+import { BookmarkAdded, Edit } from '@mui/icons-material';
 
 import useStyles from './styles';
 import { deletePost, likePost, savePost } from '../../../redux/actions/postActions.js';
@@ -110,7 +110,7 @@ const Post = ({ post, setCurrentId }) => {
       </Box>
       {isPostCreatedByUser && (
         <Button size="small" className={classes.overlay2} onClick={clickUpdateHandler}>
-          <MoreHoriz />
+          <Edit />
         </Button>
       )}
 

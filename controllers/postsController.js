@@ -40,7 +40,8 @@ export const getPosts = catchAsync(async (req, res, next) => {
 
 export const getPostBySearch = catchAsync(async (req, res, next) => {
     const search = req.query.search;
-    const tags = req.query.tags.split(",");
+    let tags = req.query.tags.split(",");
+    tags = tags.map(tag => new RegExp(tag, "i"));
 
     const title = new RegExp(search, "i");
     const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags } }] });
